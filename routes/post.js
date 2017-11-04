@@ -1,30 +1,106 @@
 var express = require('express');
-var rp = require('request-promise');
 var models = require('../models');
+var fv = require('../tools/validator');
 
 var router = express.Router();
 
 router.post('/', (req, res) => {
-    if (req.headers.authorization) {
-        return res.status(200).send({
-            status: { success: false, message: '로그인해주세요.' }
-        }).end();
-    }
-    rp.get(`https://graph.facebook.com/v2.5/me?access_token=${req.headers.authorization}&fields=id,name,picture`)
-        .then(response => JSON.parse(response))
-        .then(response => {
-            let postData = {};
-            postData.userId = response.id;
-            postData.usename = response.name;
-            postData.profile = response.picture.data.url;
-            postData.isOpen = true;
-            postData.title = req.body.title;
-            postData.content = req.body.content;
-            postData.createdAt = new Date();
+    if (!fv.isLogin(req, res)) return;
+    let postData = fv.checkData(req, res, 'post', true);
+    if (!postData) return;
+    postData.username = req.user.username;
+    postData.isOpen = true;
+    postData.createdAt = new Date();
+    models.Post.create(postData)
+        .then(post => {
+            res.status(200).json({
+                status: { success: true, message: '정상적으로 폭격 요청되었습니다.' }
+            }).end();
         })
         .catch(err => {
-            res.status(200).send({
-                status: { success: false, message: '알 수 없는 원인으로 등록할 수 없습니다.' }
+            res.status(200).json({
+                status: { success: false, message: err.message }
+            }).end();
+        });
+});
+
+router.get('/', (req, res) => {
+    models.findAll({
+        where: { username: (req.query.username) || undefined },
+        order: [['createdAt', 'DESC']]
+    })
+        .then(posts => {
+            if (posts) return posts;
+            throw new Error('발견된 폭격지가 없습니다.');
+        })
+        .then(posts => {
+            res.status(200).json({
+                status: { success: true, message: '폭격지 발견!' },
+                posts: posts
+            }).end();
+        })
+        .catch(err => {
+            res.status(200).json({
+                status: { success: false, message: err.message }
+            }).end();
+        });
+});
+
+router.get('/:idx', (req, res) => {
+    if (!req.params.idx) return res.status(200).json({
+        status: { success: false, message: 'need `idx` in params' }
+    }).end();
+
+    models.Post.findOne({
+        where: { idx: req.params.idx }
+    })
+        .then(post => {
+            if (post) return post;
+            throw new Error('발견된 폭격지가 없습니다.');
+        })
+        .then(post => {
+            res.status(200).json({
+                status: { success: true, message: '폭격지를 찾았습니다!' },
+                post: post
+            }).end();
+        })
+        .catch(err => {
+            res.status(200).json({
+                status: { success: false, message: err.message }
+            }).end();
+        });
+});
+
+router.put('/:idx/:isOpen', (req, res) => {
+    if (!fv.isLogin(req, res)) return;
+    if (!(req.params.idx && req.params.isOpen)) return res.status(200).json({
+        status: { success: false, message: 'need `idx` and `isOpen` in params' }
+    }).end();
+
+    models.Post.findOne({
+        where: { idx: req.params.idx }
+    })
+        .then(post => {
+            if (post) return post;
+            throw new Error('발견된 폭격지가 없습니다.');
+        })
+        .then(post => {
+            if (post.username === req.user.username) return post;
+            throw new Error('내가 만든 폭격지가 아닙니다.');
+        })
+        .then(post => {
+            if (req.params.isOpen === 'true') post.isOpen = true;
+            if (req.params.isOpen === 'false') post.isOpen = false;
+            return post.save();
+        })
+        .then(() => {
+            res.status(200).json({
+                status: { success: true, message: '상태를 변경했습니다.' }
+            }).end();
+        })
+        .catch(err => {
+            res.status(200).json({
+                status: { success: false, message: err.message }
             }).end();
         });
 });

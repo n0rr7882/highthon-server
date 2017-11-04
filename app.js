@@ -37,8 +37,13 @@ app.use(fileUpload({
 	limits: { fileSize: 50 * 1024 * 1024 }  // 50MB
 }));
 
-
-
+app.use(require('./tools/authentication'));
+app.use((req, res, next) => {
+	if (req.body && req.body.data) {
+		req.body = JSON.parse(req.body.data);
+	}
+	next();
+});
 app.use('/', require('./routes/index'));
 
 // catch 404 and forward to error handler

@@ -33,4 +33,8 @@ Object.keys(db).forEach(function (modelName) {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+db.Post.belongsTo(db.User, { foreignKey: 'username', targetKey: 'username', foreignKeyConstraint: true, onDelete: 'cascade', as: 'user' });
+db.Comment.belongsTo(db.User, { foreignKey: 'username', targetKey: 'username', foreignKeyConstraint: true, onDelete: 'cascade', as: 'user' });
+db.Comment.belongsTo(db.Post, { foreignKey: 'post_idx', targetKey: 'idx', foreignKeyConstraint: true, onDelete: 'cascade', as: 'post' });
+
 module.exports = db;

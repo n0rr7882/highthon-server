@@ -7,20 +7,10 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
             allowNull: false
         },
-        userId: {
-            field: 'user_id',
-            type: DataTypes.STRING,
-            allowNull: false
-        },
         username: {
             field: 'username',
             type: DataTypes.STRING,
-            allowNull: false
-        },
-        profile: {
-            field: 'profile',
-            type: DataTypes.TEXT,
-            allowNull: false
+            primaryKey: true
         },
         isOpen: {
             field: 'is_open',

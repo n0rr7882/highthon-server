@@ -12,22 +12,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false
         },
-        userId: {
-            field: 'user_id',
-            type: DataTypes.STRING,
-            allowNull: false
-        },
         username: {
             field: 'username',
             type: DataTypes.STRING,
             allowNull: false
         },
-        profile: {
-            field: 'profile',
-            type: DataTypes.TEXT,
-            allowNull: false
-        },
-        comment: {
+        content: {
             field: 'content',
             type: DataTypes.TEXT,
             allowNull: false

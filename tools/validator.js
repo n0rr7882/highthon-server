@@ -1,3 +1,7 @@
+const crypto = require('crypto');
+
+const config = require('../config/config');
+
 const CHECK_LIST = {
     user: [
         { property: 'username', reg: /^(?=.*).{1,20}$/, message: '20자 이내의 이름이 필요합니다.' },
@@ -8,7 +12,7 @@ const CHECK_LIST = {
         { property: 'content', reg: /^.{1,1000}$/, message: '내용을 1000자 이내로 입력해주세요.' }
     ],
     comment: [
-        { property: 'comment', reg: /^.{1,200}$/, message: '코멘트를 200자 이내로 입력해주세요.' }
+        { property: 'content', reg: /^.{1,200}$/, message: '코멘트를 200자 이내로 입력해주세요.' }
     ]
 };
 
@@ -23,32 +27,25 @@ module.exports = {
                 result[item.property] = req.body[item.property];
             } else {
                 if (!isStrict && !req.body[item.property]) continue;
-                return new Error(item.message);
+                res.status(200).json({
+                    status: { success: false, message: `${item.message}` }
+                }).end();
+                return false;
             }
         }
         return result;
     },
 
-    initData: (serviceData, service) => {
-        for (let item of INIT_LIST[service]) {
-            serviceData[item.property] = item.defaultValue;
-        }
-        return serviceData;
-    },
-
-    isLogin: (req) => {
+    isLogin: (req, res) => {
         if (req.user) return true;
+        res.status(200).json({
+            status: { success: false, message: `로그인이 필요한 서비스입니다.` }
+        }).end();
         return false;
     },
 
-    isAdmin: (req) => {
-        if (req.user.rank === 3) return true;
-        return false;
-    },
-
-    isNotDenied: (req) => {
-        if (req.user.rank !== 1) return true;
-        return false;
+    encryptPassword: pw => {
+        return crypto.createHash('sha256').update(pw + config.salt).digest('base64');
     }
 
 };
