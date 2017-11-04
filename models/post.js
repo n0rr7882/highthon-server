@@ -27,6 +27,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: false
         },
+        commentNum: {
+            field: 'comment_num',
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         createdAt: {
             field: 'created_at',
             type: DataTypes.DATE,

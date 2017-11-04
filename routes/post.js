@@ -11,6 +11,7 @@ router.post('/', (req, res) => {
     postData.username = req.user.username;
     postData.isOpen = true;
     postData.createdAt = new Date();
+    postData.commentNum = 0;
     models.User.findOne({
         where: { username: req.user.username }
     })

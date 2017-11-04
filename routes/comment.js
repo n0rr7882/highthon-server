@@ -23,7 +23,11 @@ router.post('/:idx', (req, res) => {
             throw new Error('스스로 폭격할 수 없습니다.');
         })
         .then(post => {
-            if (post.isOpen) return models.Comment.create(commentData);
+            if (post.isOpen) {
+                post.commentNum += 1;
+                post.save();
+                return models.Comment.create(commentData);
+            }
             throw new Error('폭격중지된 폭격지입니다.');
         })
         .then(comment => {
