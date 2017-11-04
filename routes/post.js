@@ -11,7 +11,13 @@ router.post('/', (req, res) => {
     postData.username = req.user.username;
     postData.isOpen = true;
     postData.createdAt = new Date();
-    models.Post.create(postData)
+    models.User.findOne({
+        where: { username: req.user.username }
+    })
+        .then(user => {
+            if (user) return models.Post.create(postData);
+            throw new Error('너 누구야...');
+        })
         .then(post => {
             res.status(200).json({
                 status: { success: true, message: '정상적으로 폭격 요청되었습니다.' }
