@@ -27,7 +27,7 @@ router.post('/', (req, res) => {
             let token = jwt.sign({ username: user.username }, config.salt, { algorithm: "HS256" });
             res.status(200).json({
                 status: { success: true, message: '로그인에 성공하였습니다.' },
-                token: token,
+                token: { data: token },
                 user: user
             }).end();
         })
