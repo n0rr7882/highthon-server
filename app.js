@@ -4,13 +4,15 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
+const config = require('./config/config');
 
 // connect To DB
 const models = require('./models');
-models.sequelize.sync()
+models.sequelize
+	.sync({ force: config.reset })
 	.then(() => {
 		console.log('✓ DB connection success.');
-		console.log('  Press CTRL-C to stop\n');
 	})
 	.catch(err => {
 		console.error(err);
@@ -31,6 +33,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(fileUpload({
+	limits: { fileSize: 50 * 1024 * 1024 }  // 50MB
+}));
+
+
 
 app.use('/', require('./routes/index'));
 

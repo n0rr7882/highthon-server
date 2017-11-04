@@ -1,0 +1,7 @@
+{
+    "port": 5000,
+    "jwtAlgorithm": "HS256",
+    "algorithm": "sha256",
+    "salt": "~!@#$%^&*()_+HIGHTHON+_)(*&^%$#@!~",
+    "reset": false
+}
