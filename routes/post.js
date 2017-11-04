@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
 
 router.get('/', (req, res) => {
     models.Post.findAll({
-        where: { username: (req.query.username) ? req.query.username : undefined },
+        where: (req.query.username) ? { username: req.query.username } : undefined,
         order: [['createdAt', 'DESC']]
     })
         .then(posts => {
