@@ -9,7 +9,7 @@ const CHECK_LIST = {
     ],
     post: [
         { property: 'title', reg: /^.{1,20}$/, message: '제목을 20자 이내로 입력해주세요.' },
-        { property: 'content', reg: /^.{1,1000}$/, message: '내용을 1000자 이내로 입력해주세요.' }
+        { property: 'content', reg: /^.{1,1000}$/gm, message: '내용을 1000자 이내로 입력해주세요.' }
     ],
     comment: [
         { property: 'content', reg: /^.{1,200}$/, message: '코멘트를 200자 이내로 입력해주세요.' }

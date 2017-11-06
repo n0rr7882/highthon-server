@@ -1,8 +1,8 @@
-var express = require('express');
-var fv = require('../tools/validator');
+const express = require('express');
+const fv = require('../tools/validator');
 const models = require('../models');
 
-var router = express.Router();
+const router = express.Router();
 
 router.post('/:idx', (req, res) => {
     if (!fv.isLogin(req, res)) return;

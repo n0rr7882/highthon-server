@@ -1,10 +1,10 @@
-var express = require('express');
-var models = require('../models');
-var mkdirp = require('mkdirp');
-var gm = require('gm');
+const express = require('express');
+const models = require('../models');
+const mkdirp = require('mkdirp');
+const gm = require('gm');
 
-var fv = require('../tools/validator');
-var router = express.Router();
+const fv = require('../tools/validator');
+const router = express.Router();
 
 router.post('/', (req, res) => {
     let userData = fv.checkData(req, res, 'user', true);
