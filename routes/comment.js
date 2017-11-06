@@ -34,7 +34,7 @@ router.post('/:idx', (req, res) => {
             throw new Error('폭격중지된 폭격지입니다.');
         })
         .then(comments => {
-            currentPost.commentNum = comments.length;
+            currentPost.commentNum = comments.length + 1;
             return currentPost.save();
         })
         .then(() => {
