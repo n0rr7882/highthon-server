@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.post('/:idx', (req, res) => {
     if (!fv.isLogin(req, res)) return;
+    let currentPost = undefined;
     let commentData = fv.checkData(req, res, 'comment', true);
     if (!commentData) return;
     commentData.createdAt = new Date();
@@ -24,13 +25,19 @@ router.post('/:idx', (req, res) => {
         })
         .then(post => {
             if (post.isOpen) {
-                post.commentNum += 1;
-                post.save();
-                return models.Comment.create(commentData);
+                currentPost = post;
+                models.Comment.create(commentData);
+                return models.Comment.findAll({
+                    where: { postIdx: req.params.idx }
+                });
             }
             throw new Error('폭격중지된 폭격지입니다.');
         })
-        .then(comment => {
+        .then(comments => {
+            currentPost.commentNum = comments.length;
+            return currentPost.save();
+        })
+        .then(() => {
             res.status(200).json({
                 status: { success: true, message: '폭격 성공!' }
             }).end();
