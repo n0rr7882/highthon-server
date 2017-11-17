@@ -1,7 +1,8 @@
 # Trump's Fact폭격장
 
 * 모든 응답 코드는 서버측에서 발생한 `500`, `404`에러를 제외하고 `200`으로 동일합니다.
-* 빠른 개발을 위해 CRUD중 일부는 개발하지 않았습니다.
+* 해커톤에 맞춘 빠른 개발을 위해 CRUD중 일부는 개발하지 않았습니다.
+* 현재 가동되는 서버는 http://n0rr.kro.kr:3333 에 존재합니다.
 
 ## `POST /users`
 
@@ -12,7 +13,7 @@ request body data
     profile: [image file]
 ```
 response:
-```
+```json
 {
     "status": {
         "success": true,
@@ -29,7 +30,7 @@ request body data
     password: Asdf!234
 ```
 response:
-```
+```json
 {
     "status": {
         "success": true,
@@ -52,7 +53,7 @@ request headers
     authorization: eyJhbGciOiJIUzI1NiIsInR...
 ```
 response:
-```
+```json
 {
     "status": {
         "success": true,
@@ -74,7 +75,7 @@ request body data:
     content: 시험을 앞두고 있는데도 페이스북을 하..
 ```
 response:
-```
+```json
 {
     "status": {
         "success": true,
@@ -89,7 +90,7 @@ request querystring
     username: TESTNAME (선택)
 ```
 response:
-```
+```json
 {
     "status": {
         "success": true,
@@ -116,7 +117,7 @@ request params
     idx: 1 (post idx)
 ```
 response:
-```
+```json
 {
     "status": {
         "success": true,
@@ -141,7 +142,7 @@ request params
     isOpen: true/false
 ```
 response:
-```
+```json
 {
     "status": {
         "success": true,
@@ -160,7 +161,7 @@ request body data
     content: 와 그쪽도 정말 만만찮...
 ```
 response:
-```
+```json
 {
     "status": {
         "success": true,
@@ -176,7 +177,7 @@ request params
     idx: 1 (post idx)
 ```
 response:
-```
+```json
 {
     "status": {
         "success": true,
